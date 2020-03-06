@@ -1,6 +1,6 @@
 ﻿namespace EMMAutoMaterialOrderer
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -28,13 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.buttonOpenEMM = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // buttonOpenEMM
+            // 
+            this.buttonOpenEMM.Location = new System.Drawing.Point(328, 144);
+            this.buttonOpenEMM.Name = "buttonOpenEMM";
+            this.buttonOpenEMM.Size = new System.Drawing.Size(148, 23);
+            this.buttonOpenEMM.TabIndex = 0;
+            this.buttonOpenEMM.Text = "EMMファイルを開く";
+            this.buttonOpenEMM.UseVisualStyleBackColor = true;
+            this.buttonOpenEMM.Click += new System.EventHandler(this.buttonOpenEMM_Click);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonOpenEMM);
+            this.Name = "MainForm";
             this.Text = "Form1";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Button buttonOpenEMM;
     }
 }
 

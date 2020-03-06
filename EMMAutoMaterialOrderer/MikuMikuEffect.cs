@@ -54,8 +54,7 @@ namespace MikuMikuEffect
             while ((str = reader.ReadLine()) != null)
             {
                 // [Effect@tabName]
-                var tabName = str.Split('@')[1];
-                tabName.Replace("]\r\n", "");
+                var tabName = str.Split('@')[1].Replace("]", "");
                 // 内容
                 Effects.Add(new EMMEffectType(tabName, reader));
             }
@@ -106,23 +105,23 @@ namespace MikuMikuEffect
             {
                 var line = reader.ReadLine();
                 //読み込んだ行が改行文字のみであった場合ループから抜ける
-                if (line == "\r\n")
+                if (line == "")
                     break;
-                // {[0]：Typ?, [1]：=, [2]：Value}
-                str = line.Split(' ');
-                //値クラスタから改行文字を削除
-                str[2] = str[2].Replace("\r\n", "");
+                // {[0]：Typ?, [1]：Value}
+                str = line.Split('=');
+                //値クラスタ最初の空白文字を削除
+                str[1] = str[1].Remove(0, 1);
 
                 // 種類クラスタの最初の文字で種類を判断
                 if (str[0][0] == 'D' || str[0][0] == 'O')
-                    Owner = str[2];
+                    Owner = str[1];
                 else if (str[0].Contains("["))
                 {
                     //サブセット
                     //str[0]を種類IDとサブセット添字に分割
                     //{[0]：ObjID, [1]：SubID}
                     var numji = str[0].Split('[');
-                    int objID = int.Parse(Regex.Replace(numji[0], @"[^0-9]", ""));
+                    int objID = int.Parse(Regex.Replace(numji[0], @"[^0-9]", "")) - 1;
                     int subID = int.Parse(Regex.Replace(numji[1], @"[^0-9]", ""));
 
                     while (ObjectSettings[objID].SubsetSettings.Count <= subID)
@@ -132,14 +131,14 @@ namespace MikuMikuEffect
 
                     // 種類クラスタが"."を含むならShow設定
                     if (str[0].Contains("."))
-                        ObjectSettings[objID].SubsetSettings[subID].Show = bool.Parse(str[2]);
+                        ObjectSettings[objID].SubsetSettings[subID].Show = bool.Parse(str[1]);
                     else
-                        ObjectSettings[objID].SubsetSettings[subID].Path = str[2];
+                        ObjectSettings[objID].SubsetSettings[subID].Path = str[1];
                 }
                 else
                 {
                     //オブジェクト
-                    var i = int.Parse(Regex.Replace(str[0], @"[^0-9]", ""));
+                    var i = int.Parse(Regex.Replace(str[0], @"[^0-9]", "")) - 1;
                     while (ObjectSettings.Count <= i)
                     {
                         ObjectSettings.Add(new EMMObjectSettings());
@@ -149,12 +148,12 @@ namespace MikuMikuEffect
                     {
                         // 種類クラスタが"."を含むならShow設定
                         ObjectSettings[i].IsModel = str[0][0] == 'P';
-                        ObjectSettings[i].EffectSetting.Show = bool.Parse(str[2]);
+                        ObjectSettings[i].EffectSetting.Show = bool.Parse(str[1]);
                     }
                     else
                     {
                         ObjectSettings[i].IsModel = str[0][0] == 'P';
-                        ObjectSettings[i].EffectSetting.Path = str[2];
+                        ObjectSettings[i].EffectSetting.Path = str[1];
                     }
                 }
             }
