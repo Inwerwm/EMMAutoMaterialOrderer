@@ -58,6 +58,15 @@ namespace MikuMikuEffect
                 // 内容
                 Effects.Add(new EMMEffectType(tabName, reader));
             }
+
+            // IsModelの整合性を確保
+            for (int i = 1; i < Effects.Count; i++)
+            {
+                for (int j = 0; j < Effects[i].ObjectSettings.Count; j++)
+                {
+                    Effects[i].ObjectSettings[j].IsModel = Effects[0].ObjectSettings[j].IsModel;
+                }
+            }
         }
 
         /// <param name="writer">エンコードはシフトJISに設定すること</param>
@@ -65,6 +74,21 @@ namespace MikuMikuEffect
         {
             if (writer.Encoding != Encoding.GetEncoding("shift_jis"))
                 throw new ArgumentException("EMMData Write エンコードエラー" + Environment.NewLine + "StreamWriterのエンコードをシフトJISに設定してください");
+
+            writer.WriteLine("[Info]");
+            writer.WriteLine(GetValueString("Version", Version.ToString()));
+            writer.WriteLine("");
+
+            foreach (var item in Effects)
+            {
+                item.Write(writer);
+                writer.WriteLine("");
+            }
+        }
+
+        private string GetValueString(string name, string value)
+        {
+            return name + " = " + value;
         }
     }
 
@@ -157,6 +181,55 @@ namespace MikuMikuEffect
                     }
                 }
             }
+        }
+
+        public void Write(StreamWriter writer)
+        {
+            string tabName = Name == "" ? "Effect"
+                           : Name == "Object" ? "Object"
+                           : "Effect@" + Name;
+            writer.WriteLine("[" + tabName + "]");
+
+            if (Name != "Object")
+            {
+                if (Name == "")
+                    writer.WriteLine(GetValueString("Default", Owner));
+                else
+                    writer.WriteLine(GetValueString("Owner", Owner));
+            }
+
+            for (int i = 0; i < Count; i++)
+            {
+                var left = ObjectSettings[i].IsModel ? "Pmd" : "Acs";
+                left += i + 1;
+                writer.WriteLine(GetValueString(left, ObjectSettings[i].EffectSetting.Path));
+                if (Name != "Object")
+                {
+                    if (!ObjectSettings[i].EffectSetting.Show)
+                        writer.WriteLine(GetValueString(left + ".show", ObjectSettings[i].EffectSetting.Show));
+
+                    if (ObjectSettings[i].SubsetSettings.Count > 0)
+                    {
+                        for (int j = 0; j < ObjectSettings[i].SubsetSettings.Count; j++)
+                        {
+                            if (ObjectSettings[i].SubsetSettings[j].Path != "none")
+                                writer.WriteLine(GetValueString(left + "[" + j + "]", ObjectSettings[i].SubsetSettings[j].Path));
+                            if (!ObjectSettings[i].SubsetSettings[j].Show)
+                                writer.WriteLine(GetValueString(left + "[" + j + "].show", ObjectSettings[i].SubsetSettings[j].Show));
+                        }
+                    }
+                }
+            }
+        }
+
+        private string GetValueString(string name, string value)
+        {
+            return name + " = " + value;
+        }
+
+        private string GetValueString(string name, bool value)
+        {
+            return GetValueString(name, value.ToString().ToLower());
         }
     }
 
