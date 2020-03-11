@@ -41,7 +41,7 @@ namespace EMMAutoMaterialOrderer
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show(ex.Message);
             }
         }
     }

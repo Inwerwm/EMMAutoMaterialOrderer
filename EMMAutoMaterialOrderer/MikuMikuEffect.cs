@@ -136,8 +136,8 @@ namespace MikuMikuEffect
                 //値クラスタ最初の空白文字を削除
                 str[1] = str[1].Remove(0, 1);
 
-                // 種類クラスタの最初の文字で種類を判断
-                if (str[0][0] == 'D' || str[0][0] == 'O')
+                // 種類クラスタの文字で種類を判断
+                if (str[0][0] == 'D' || str[0][1] == 'w')
                     Owner = str[1];
                 else if (str[0].Contains("["))
                 {
@@ -165,20 +165,17 @@ namespace MikuMikuEffect
                     var i = int.Parse(Regex.Replace(str[0], @"[^0-9]", "")) - 1;
                     while (ObjectSettings.Count <= i)
                     {
-                        ObjectSettings.Add(new EMMObjectSettings());
+                        var s = new EMMObjectSettings(str[0][0] == 'P');
+                        s.IsObj = str[0][0] == 'O';
+                        ObjectSettings.Add(s);
                     }
 
+                    // 種類クラスタが"."を含むならShow設定
                     if (str[0].Contains("."))
-                    {
-                        // 種類クラスタが"."を含むならShow設定
-                        ObjectSettings[i].IsModel = str[0][0] == 'P';
                         ObjectSettings[i].EffectSetting.Show = bool.Parse(str[1]);
-                    }
+                    // そうでなければパス
                     else
-                    {
-                        ObjectSettings[i].IsModel = str[0][0] == 'P';
                         ObjectSettings[i].EffectSetting.Path = str[1];
-                    }
                 }
             }
         }
@@ -198,23 +195,34 @@ namespace MikuMikuEffect
                     writer.WriteLine(GetValueString("Owner", Owner));
             }
 
+            // オブジェクト書込ループ
             for (int i = 0; i < Count; i++)
             {
-                var left = ObjectSettings[i].IsModel ? "Pmd" : "Acs";
+                // モデルかアクセか
+                var left = ObjectSettings[i].IsModel ? "Pmd"
+                         : ObjectSettings[i].IsObj ? "Obj"
+                         : "Acs";
                 left += i + 1;
-                writer.WriteLine(GetValueString(left, ObjectSettings[i].EffectSetting.Path));
+
+                // パス
+                if (ObjectSettings[i].EffectSetting.ExistPath)
+                    writer.WriteLine(GetValueString(left, ObjectSettings[i].EffectSetting.Path));
+
+                // [Object] 以外の場合
                 if (Name != "Object")
                 {
-                    if (!ObjectSettings[i].EffectSetting.Show)
+                    // show設定
+                    if (ObjectSettings[i].EffectSetting.ExistShow)
                         writer.WriteLine(GetValueString(left + ".show", ObjectSettings[i].EffectSetting.Show));
 
+                    // サブセット展開されている場合
                     if (ObjectSettings[i].SubsetSettings.Count > 0)
                     {
                         for (int j = 0; j < ObjectSettings[i].SubsetSettings.Count; j++)
                         {
-                            if (ObjectSettings[i].SubsetSettings[j].Path != "none")
+                            if (ObjectSettings[i].SubsetSettings[j].ExistPath)
                                 writer.WriteLine(GetValueString(left + "[" + j + "]", ObjectSettings[i].SubsetSettings[j].Path));
-                            if (!ObjectSettings[i].SubsetSettings[j].Show)
+                            if (ObjectSettings[i].SubsetSettings[j].ExistShow)
                                 writer.WriteLine(GetValueString(left + "[" + j + "].show", ObjectSettings[i].SubsetSettings[j].Show));
                         }
                     }
@@ -236,27 +244,111 @@ namespace MikuMikuEffect
     public class EMMObjectSettings
     {
         public bool IsModel { get; set; }
+        public bool IsObj { get; set; }
         public EMMEffectSetting EffectSetting { get; set; }
         public int Count { get { return SubsetSettings.Count; } }
         public List<EMMEffectSetting> SubsetSettings { get; set; }
 
-        public EMMObjectSettings(bool isModel = true, string path = "none", bool show = true)
+        public EMMObjectSettings(bool isModel, string path, bool show)
         {
             IsModel = isModel;
+            IsObj = false;
             EffectSetting = new EMMEffectSetting(path, show);
+            SubsetSettings = new List<EMMEffectSetting>();
+        }
+        public EMMObjectSettings(bool isModel, string path)
+        {
+            IsModel = isModel;
+            IsObj = false;
+            EffectSetting = new EMMEffectSetting(path);
+            SubsetSettings = new List<EMMEffectSetting>();
+        }
+        public EMMObjectSettings(bool isModel, bool show)
+        {
+            IsModel = isModel;
+            IsObj = false;
+            EffectSetting = new EMMEffectSetting(show);
+            SubsetSettings = new List<EMMEffectSetting>();
+        }
+        public EMMObjectSettings(bool isModel)
+        {
+            IsModel = isModel;
+            IsObj = false;
+            EffectSetting = new EMMEffectSetting();
             SubsetSettings = new List<EMMEffectSetting>();
         }
     }
 
     public class EMMEffectSetting
     {
-        public bool Show { get; set; }
-        public string Path { get; set; }
-
-        public EMMEffectSetting(string path = "none", bool show = true)
+        bool show;
+        public bool Show
         {
+            get
+            {
+                if (!ExistShow)
+                    throw new InvalidOperationException("Showが存在しないEMMEffectSettingsからShowが呼び出されました");
+                else
+                    return show;
+            }
+            set
+            {
+                show = value;
+                ExistShow = true;
+            }
+        }
+        public bool ExistShow { get; private set; }
+
+        string path;
+        public string Path
+        {
+            get
+            {
+                if (!ExistPath)
+                    throw new InvalidOperationException("Pathが存在しないEMMEffectSettingsからPathが呼び出されました");
+                else
+                    return path;
+            }
+            set
+            {
+                path = value;
+                ExistPath = true;
+            }
+        }
+        public bool ExistPath { get; private set; }
+
+        public EMMEffectSetting()
+        {
+            ExistShow = false;
+            ExistPath = false;
+        }
+        public EMMEffectSetting(string path, bool show)
+        {
+            ExistShow = true;
+            ExistPath = true;
             Show = show;
             Path = path;
+        }
+        public EMMEffectSetting(string path)
+        {
+            ExistShow = false;
+            ExistPath = true;
+            Path = path;
+        }
+        public EMMEffectSetting(bool show)
+        {
+            ExistShow = true;
+            ExistPath = false;
+            Show = show;
+        }
+
+        public void ShowUnset()
+        {
+            ExistShow = false;
+        }
+        public void PathUnset()
+        {
+            ExistPath = false;
         }
     }
 }
