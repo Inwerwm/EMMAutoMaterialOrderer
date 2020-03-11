@@ -1,4 +1,4 @@
-﻿using MikuMikuEffect;
+﻿using MikuMikuMethods.MME;
 using System;
 using System.IO;
 using System.Text;
