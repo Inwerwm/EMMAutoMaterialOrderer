@@ -189,7 +189,7 @@
             this.Margin = new System.Windows.Forms.Padding(5, 7, 5, 7);
             this.MinimumSize = new System.Drawing.Size(1280, 640);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "EMM Auto Material Orderer";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

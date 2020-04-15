@@ -133,9 +133,14 @@ namespace EMMAutoMaterialOrderer
             if (objID < 0)
                 throw new ArgumentException("リストボックスから並び替え対象オブジェクトを選択してください");
 
+            var backupName = $"{Path.GetDirectoryName(filePath)}\\{Path.GetFileNameWithoutExtension(filePath)}_{DateTime.Now:yyyy_MM_dd_HH_mm_ss}.emm";
+            using (var writer = new StreamWriter(backupName, false, Encoding.GetEncoding("shift_jis")))
+            {
+                Emm.Write(writer);
+            }
+
             OrderEMM(objID);
 
-            filePath = Path.GetDirectoryName(filePath) + "\\" + Path.GetFileNameWithoutExtension(filePath) + "_writed.emm";
             using (var writer = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
             {
                 Emm.Write(writer);
