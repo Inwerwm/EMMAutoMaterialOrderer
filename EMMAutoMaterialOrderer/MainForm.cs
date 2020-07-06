@@ -111,7 +111,7 @@ namespace EMMAutoMaterialOrderer
 
             var fullPath = filenames[0];
 
-            if (string.Compare(Path.GetExtension(fullPath), extention, true) != 0)
+            if (string.Compare(Path.GetExtension(fullPath).Trim('.'), extention, true) != 0)
             {
                 throw new FormatException($"拡張子が違います。{Environment.NewLine}{extention.ToUpper()}ファイルをドロップしてください。");
             }
@@ -123,7 +123,10 @@ namespace EMMAutoMaterialOrderer
         {
             try
             {
-                model.ReadEMM(GetDragFilePath(e, "EMM"));
+                string path = GetDragFilePath(e, "EMM");
+                model.ReadEMM(path);
+                textBoxReadEMM.Text = path;
+                listBoxOrderObj.Items.AddRange(model.Emm.Effects[model.Emm.Effects.Select(o => o.Name).ToList().IndexOf("Object")].ObjectSettings.Select(s => Path.GetFileName(s.EffectSetting.Path)).ToArray());
             }
             catch (Exception ex)
             {
@@ -135,7 +138,9 @@ namespace EMMAutoMaterialOrderer
         {
             try
             {
-                model.ReadBasisPmx(GetDragFilePath(e, "PMX"));
+                string path = GetDragFilePath(e, "PMX");
+                model.ReadBasisPmx(path);
+                textBoxReadBasisPmx.Text = path;
             }
             catch (Exception ex)
             {
@@ -147,7 +152,9 @@ namespace EMMAutoMaterialOrderer
         {
             try
             {
-                model.ReadTargetPmx(GetDragFilePath(e, "PMX"));
+                string path = GetDragFilePath(e, "PMX");
+                model.ReadTargetPmx(path);
+                textBoxReadTargetPMX.Text = path;
             }
             catch (Exception ex)
             {
