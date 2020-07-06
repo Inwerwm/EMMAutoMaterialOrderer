@@ -1,4 +1,5 @@
-﻿using MikuMikuMethods.MME;
+﻿using MikuMikuMethods;
+using MikuMikuMethods.MME;
 using MikuMikuMethods.Pmx;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace EMMAutoMaterialOrderer
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -47,7 +48,7 @@ namespace EMMAutoMaterialOrderer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -65,7 +66,7 @@ namespace EMMAutoMaterialOrderer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -84,8 +85,73 @@ namespace EMMAutoMaterialOrderer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
+            }
+        }
+
+        private void Common_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
+        }
+
+        private static string GetDragFilePath(DragEventArgs e, string extention)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                throw new ArgumentException("ファイルをドロップしてください。");
+            }
+
+            var filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (!filenames.Length.IsWithin(1, 1))
+            {
+                throw new RankException("ファイルは1つだけドロップしてください。");
+            }
+
+            var fullPath = filenames[0];
+
+            if (string.Compare(Path.GetExtension(fullPath), extention, true) != 0)
+            {
+                throw new FormatException($"拡張子が違います。{Environment.NewLine}{extention.ToUpper()}ファイルをドロップしてください。");
+            }
+
+            return fullPath;
+        }
+
+        private void ReadEMM_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                model.ReadEMM(GetDragFilePath(e, "EMM"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ReadBasisPmx_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                model.ReadBasisPmx(GetDragFilePath(e, "PMX"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ReadTargetPMX_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                model.ReadTargetPmx(GetDragFilePath(e, "PMX"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

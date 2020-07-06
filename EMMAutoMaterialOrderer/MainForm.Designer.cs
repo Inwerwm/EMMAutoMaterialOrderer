@@ -42,6 +42,7 @@
             // 
             // buttonReadEMM
             // 
+            this.buttonReadEMM.AllowDrop = true;
             this.buttonReadEMM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -53,6 +54,8 @@
             this.buttonReadEMM.Text = "EMMファイルを読込";
             this.buttonReadEMM.UseVisualStyleBackColor = true;
             this.buttonReadEMM.Click += new System.EventHandler(this.buttonReadEMM_Click);
+            this.buttonReadEMM.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadEMM_DragDrop);
+            this.buttonReadEMM.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // buttonWriteEMM
             // 
@@ -70,6 +73,7 @@
             // 
             // buttonReadBasisPmx
             // 
+            this.buttonReadBasisPmx.AllowDrop = true;
             this.buttonReadBasisPmx.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -81,9 +85,12 @@
             this.buttonReadBasisPmx.Text = "材質並び順変更前PMXを読込";
             this.buttonReadBasisPmx.UseVisualStyleBackColor = true;
             this.buttonReadBasisPmx.Click += new System.EventHandler(this.buttonReadBasisPmx_Click);
+            this.buttonReadBasisPmx.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadBasisPmx_DragDrop);
+            this.buttonReadBasisPmx.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // buttonReadTargetPMX
             // 
+            this.buttonReadTargetPMX.AllowDrop = true;
             this.buttonReadTargetPMX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -95,6 +102,8 @@
             this.buttonReadTargetPMX.Text = "材質並び順変更後PMXを読込";
             this.buttonReadTargetPMX.UseVisualStyleBackColor = true;
             this.buttonReadTargetPMX.Click += new System.EventHandler(this.buttonReadTargetPMX_Click);
+            this.buttonReadTargetPMX.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadTargetPMX_DragDrop);
+            this.buttonReadTargetPMX.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // listBoxOrderObj
             // 
@@ -142,6 +151,7 @@
             // 
             // textBoxReadEMM
             // 
+            this.textBoxReadEMM.AllowDrop = true;
             this.textBoxReadEMM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -152,9 +162,12 @@
             this.textBoxReadEMM.ReadOnly = true;
             this.textBoxReadEMM.Size = new System.Drawing.Size(825, 86);
             this.textBoxReadEMM.TabIndex = 3;
+            this.textBoxReadEMM.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadEMM_DragDrop);
+            this.textBoxReadEMM.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // textBoxReadBasisPmx
             // 
+            this.textBoxReadBasisPmx.AllowDrop = true;
             this.textBoxReadBasisPmx.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -165,9 +178,12 @@
             this.textBoxReadBasisPmx.ReadOnly = true;
             this.textBoxReadBasisPmx.Size = new System.Drawing.Size(825, 86);
             this.textBoxReadBasisPmx.TabIndex = 3;
+            this.textBoxReadBasisPmx.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadBasisPmx_DragDrop);
+            this.textBoxReadBasisPmx.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // textBoxReadTargetPMX
             // 
+            this.textBoxReadTargetPMX.AllowDrop = true;
             this.textBoxReadTargetPMX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -178,6 +194,8 @@
             this.textBoxReadTargetPMX.ReadOnly = true;
             this.textBoxReadTargetPMX.Size = new System.Drawing.Size(825, 86);
             this.textBoxReadTargetPMX.TabIndex = 3;
+            this.textBoxReadTargetPMX.DragDrop += new System.Windows.Forms.DragEventHandler(this.ReadTargetPMX_DragDrop);
+            this.textBoxReadTargetPMX.DragEnter += new System.Windows.Forms.DragEventHandler(this.Common_DragEnter);
             // 
             // MainForm
             // 
