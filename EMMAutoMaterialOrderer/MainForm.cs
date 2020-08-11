@@ -81,6 +81,8 @@ namespace EMMAutoMaterialOrderer
                 {
                     model.ReadTargetPmx(ofd.FileName);
                     textBoxReadTargetPMX.Text = ofd.FileName;
+
+                    listBoxOrderObj.SelectedItem = Path.GetFileName(ofd.FileName);
                 }
             }
             catch (Exception ex)
@@ -155,6 +157,8 @@ namespace EMMAutoMaterialOrderer
                 string path = GetDragFilePath(e, "PMX");
                 model.ReadTargetPmx(path);
                 textBoxReadTargetPMX.Text = path;
+
+                listBoxOrderObj.SelectedItem = Path.GetFileName(path);
             }
             catch (Exception ex)
             {
