@@ -30,7 +30,8 @@ namespace EMMAutoMaterialOrderer
                 {
                     model.ReadEMM(ofd.FileName);
                     textBoxReadEMM.Text = ofd.FileName;
-                    listBoxOrderObj.Items.AddRange(model.Emm.Effects[model.Emm.Effects.Select(o => o.Name).ToList().IndexOf("Object")].ObjectSettings.Select(s => Path.GetFileName(s.EffectSetting.Path)).ToArray());
+                    listBoxOrderObj.Items.Clear();
+                    listBoxOrderObj.Items.AddRange(model.Emm.Effects.Find(eft => eft.Name == "Object").ObjectSettings.Select(s => Path.GetFileName(s.EffectSetting.Path)).ToArray());
                 }
             }
             catch (Exception ex)
@@ -128,6 +129,7 @@ namespace EMMAutoMaterialOrderer
                 string path = GetDragFilePath(e, "EMM");
                 model.ReadEMM(path);
                 textBoxReadEMM.Text = path;
+                listBoxOrderObj.Items.Clear();
                 listBoxOrderObj.Items.AddRange(model.Emm.Effects[model.Emm.Effects.Select(o => o.Name).ToList().IndexOf("Object")].ObjectSettings.Select(s => Path.GetFileName(s.EffectSetting.Path)).ToArray());
             }
             catch (Exception ex)
