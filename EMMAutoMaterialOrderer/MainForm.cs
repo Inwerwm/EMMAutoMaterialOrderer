@@ -188,10 +188,7 @@ namespace EMMAutoMaterialOrderer
 
         public Model()
         {
-            Emm = new EMMData();
-            BasisPmx = new PmxModelData();
             readBasis = false;
-            TargetPmx = new PmxModelData();
             readTarget = false;
         }
 
@@ -199,6 +196,7 @@ namespace EMMAutoMaterialOrderer
         {
             using (var reader = new StreamReader(path, Encoding.GetEncoding("shift_jis")))
             {
+                Emm = new EMMData();
                 Emm.Read(reader);
                 filePath = path;
             }
@@ -231,6 +229,7 @@ namespace EMMAutoMaterialOrderer
         {
             using (var reader = new BinaryReader(new FileStream(path, FileMode.Open), Encoding.GetEncoding("shift_jis")))
             {
+                BasisPmx = new PmxModelData();
                 BasisPmx.Read(reader);
                 readBasis = true;
             }
@@ -240,6 +239,7 @@ namespace EMMAutoMaterialOrderer
         {
             using (var reader = new BinaryReader(new FileStream(path, FileMode.Open), Encoding.GetEncoding("shift_jis")))
             {
+                TargetPmx = new PmxModelData();
                 TargetPmx.Read(reader);
                 readTarget = true;
             }
