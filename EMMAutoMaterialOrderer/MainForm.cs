@@ -130,7 +130,7 @@ namespace EMMAutoMaterialOrderer
                 model.ReadEMM(path);
                 textBoxReadEMM.Text = path;
                 listBoxOrderObj.Items.Clear();
-                listBoxOrderObj.Items.AddRange(model.Emm.Effects[model.Emm.Effects.Select(o => o.Name).ToList().IndexOf("Object")].ObjectSettings.Select(s => Path.GetFileName(s.EffectSetting.Path)).ToArray());
+                listBoxOrderObj.Items.AddRange(model.Emm.Effects[model.Emm.Effects.Select(o => o.Name).ToList().IndexOf("Object")].ObjectSettings.Select(s => s.EffectSetting.ExistPath ? Path.GetFileName(s.EffectSetting.Path) : "").ToArray());
             }
             catch (Exception ex)
             {
